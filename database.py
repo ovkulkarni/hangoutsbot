@@ -1,6 +1,8 @@
 from peewee import SqliteDatabase, Model
 
-database = SqliteDatabase("hangoutsbot.db")
+import settings
+
+database = SqliteDatabase(settings.DATABASE_PATH)
 
 
 class BaseModel(Model):

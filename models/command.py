@@ -1,4 +1,4 @@
-from ..database import BaseModel
+from database import BaseModel
 from peewee import *
 import sys
 import importlib
@@ -15,4 +15,7 @@ class Command(BaseModel):
         if self.name not in sys.modules:
             logger.info("Importing formerly unimported command: {}".format(self.name))
             importlib.import_module("..commands.{}".format(self.name))
-        sys.modules[self.name].Command.run(user, args)
+        sys.modules[self.name].command.run(user, args)
+
+    def __str__(self):
+        return self.name

@@ -1,12 +1,15 @@
-from ..database import BaseModel
+from database import BaseModel
 from peewee import *
 
 from .user import User
-from .converstation import Conversation
+from .conversation import Conversation
 
 
 class Message(BaseModel):
-    conversation = ForeignKey(Conversation, related_name="messages")
-    user = ForeignKey(User, related_name="messages")
+    conversation = ForeignKeyField(Conversation, related_name="messages")
+    user = ForeignKeyField(User, related_name="messages")
     text = TextField()
     time = DateTimeField()
+
+    def __str__(self):
+        return "{} - {}".format(self.user, self.text)

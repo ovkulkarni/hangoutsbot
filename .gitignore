@@ -1,3 +1,6 @@
 **.pyc
 secret.py
 **.DS_Store
+private/
+**.db
+**.log

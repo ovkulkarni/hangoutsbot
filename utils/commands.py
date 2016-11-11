@@ -1,6 +1,6 @@
-from ..models.command import Command
+from models.command import Command
 
-from ..commands import all_commands
+from commands import all_commands
 
 
 class BaseCommand(object):
