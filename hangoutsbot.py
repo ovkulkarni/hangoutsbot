@@ -57,7 +57,7 @@ class HangoutsBot(object):
         if state_update.event_notification.event.sender_id.gaia_id == settings.BOT_ID:
             message = Message.create(conversation=conversation, user=self.user, text="".join(
                 [seg.text for seg in state_update.event_notification.event.chat_message.message_content.segment]), time=datetime.now())
-            message.conversation.logger.info(message.text, extra={
+            message.conversation.logger.info(message.text.replace("\n", " "), extra={
                 "username": message.user.username,
                 "message_time": datetime.strftime(message.time, "%Y-%m-%d %X"),
             })
@@ -72,7 +72,7 @@ class HangoutsBot(object):
         for seg in state_update.event_notification.event.chat_message.message_content.segment:
             message_body += seg.text
         message = Message.create(conversation=conversation, user=sending_user, text=message_body, time=datetime.now())
-        message.conversation.logger.info(message.text, extra={
+        message.conversation.logger.info(message.text.replace("\n", " "), extra={
             "username": message.user.username,
             "message_time": datetime.strftime(message.time, "%Y-%m-%d %X"),
         })
