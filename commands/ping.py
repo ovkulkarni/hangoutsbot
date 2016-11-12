@@ -16,4 +16,4 @@ class Ping(BaseCommand):
             parsed[1].append("pong")
         yield from bot.send_message(conversation, " ".join(parsed[1]))
 
-command = Ping("ping", {}, parser, True)
+command = Ping("ping", {}, parser, False)
