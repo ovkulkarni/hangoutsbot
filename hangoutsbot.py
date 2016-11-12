@@ -49,6 +49,8 @@ class HangoutsBot(object):
             yield from self.handle_message(state_update)
         elif state_update.event_notification.event.event_type == EventType.EVENT_TYPE_CONVERSATION_RENAME.value:
             yield from self.handle_rename(state_update)
+        elif state_update.event_notification.event.event_type == EventType.EVENT_TYPE_REMOVE_USER.value:
+            yield from self.handle_user_removed(state_update)
         else:
             pass
 
@@ -91,6 +93,7 @@ class HangoutsBot(object):
     @asyncio.coroutine
     def handle_rename(self, state_update):
         conversation = self.get_or_create_conversation(state_update.conversation)
+        self.check_conversation_participants(state_update.conversation)
         try:
             user = User.get(id=state_update.event_notification.event.sender_id.gaia_id)
         except User.DoesNotExist:
@@ -98,6 +101,23 @@ class HangoutsBot(object):
         new_name = state_update.event_notification.event.conversation_rename.new_name
         conversation.logger.info("{} changed topic to {}".format(user.username, new_name), extra={
             'username': "****",
+            "message_time": datetime.strftime(datetime.now(), "%Y-%m-%d %X")
+        })
+        return True
+
+    @asyncio.coroutine
+    def handle_user_removed(self, state_update):
+        conversation = self.get_or_create_conversation(state_update.conversation)
+        self.check_conversation_participants(state_update.conversation)
+        user = User.get(id=state_update.event_notification.event.sender_id.gaia_id)
+        try:
+            removing_user = User.get(id=state_update.event_notification.event.sender_id.gaia_id)
+        except User.DoesNotExist:
+            removing_user = create_user_from_id(state_update.event_notification.event.sender_id.gaia_id)
+        removed_user = User.get(id=state_update.event_notification.event.membership_change.participant_ids[0].gaia_id)
+        conversation.members.remove(removed_user)
+        conversation.logger.info("{} was kicked by {}".format(removed_user.username, removing_user.username), extra={
+            "username": "****",
             "message_time": datetime.strftime(datetime.now(), "%Y-%m-%d %X")
         })
         return True
