@@ -110,21 +110,21 @@ class HangoutsBot(object):
     @asyncio.coroutine
     def send_message(self, conversation, message):
         request = hangups.hangouts_pb2.SendChatMessageRequest(
-            request_header=client.get_request_header(),
+            request_header=self.client.get_request_header(),
             event_request_header=hangups.hangouts_pb2.EventRequestHeader(
                 conversation_id=hangups.hangouts_pb2.ConversationId(
                     id=conversation.id
                 ),
-                client_generated_id=client.get_client_generated_id(),
+                client_generated_id=self.client.get_client_generated_id(),
             ),
             message_content=hangups.hangouts_pb2.MessageContent(
                 segment=[hangups.ChatMessageSegment(message).serialize()],
             ),
         )
-    try:
-        yield from client.send_chat_message(request)
-    except:
-        logger.error("Unable to send message to {} with text '{}'".format(conversation, message))
+        try:
+            yield from self.client.send_chat_message(request)
+        except:
+            logger.error("Unable to send message to {} with text '{}'".format(conversation, message))
 
 if __name__ == "__main__":
     print("Run the bot using the manage.py file: ./manage.py run")

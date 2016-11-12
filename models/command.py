@@ -28,3 +28,16 @@ class Command(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class BaseCommand(object):
+
+    def __init__(self, name, config={}, parser=None, admin_required=False):
+        self.name = name
+        self.config = config
+        self.parser = parser
+        self.admin_required = admin_required
+
+    @asyncio.coroutine
+    def run(conversation, user, args):
+        raise NotImplementedError("The `run` method must be implemented.")

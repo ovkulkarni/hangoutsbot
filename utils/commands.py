@@ -2,26 +2,18 @@ from models.command import Command
 
 from commands import all_commands
 
-import asyncio
+import logging
+import sys
+import importlib
 
-
-class BaseCommand(object):
-
-    def __init__(self, name, config={}, parser, admin_required=False):
-        self.name = name
-        self.config = config
-        self.parser = parser
-        self.admin_required = admin_required
-
-    @asyncio.coroutine
-    def run(conversation, user, args):
-        raise NotImplementedError("The `run` method must be implemented.")
+logger = logging.getLogger(__name__)
 
 
 def register_commands():
     # first we delete all the current registered commands
     Command.delete().execute()
     for command in all_commands:
+        logger.debug("Creating {}".format(command))
         Command.create(name=command.name, admin_required=command.admin_required)
         if command.name in sys.modules:
             Command.delete().execute()

@@ -4,7 +4,10 @@ from playhouse.fields import *
 
 from .user import User
 
+import settings
+
 import logging
+import os
 
 
 class Conversation(BaseModel):
