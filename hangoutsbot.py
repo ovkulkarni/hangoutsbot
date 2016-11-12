@@ -51,6 +51,8 @@ class HangoutsBot(object):
             yield from self.handle_rename(state_update)
         elif state_update.event_notification.event.event_type == EventType.EVENT_TYPE_REMOVE_USER.value:
             yield from self.handle_user_removed(state_update)
+        elif state_update.event_notification.event.event_type == EventType.EVENT_TYPE_ADD_USER.value:
+            yield from self.handle_user_added(state_update)
         else:
             pass
 
@@ -121,6 +123,17 @@ class HangoutsBot(object):
             "message_time": datetime.strftime(datetime.now(), "%Y-%m-%d %X")
         })
         return True
+
+    @asyncio.coroutine
+    def handle_user_added(self, state_update):
+        conversation = self.get_or_create_conversation(state_update.conversation)
+        self.check_conversation_participants(state_update.conversation)
+        adding_user = User.get(id=state_update.event_notification.event.sender_id.gaia_id)
+        added_user = User.get(id=state_update.event_notification.event.membership_change.participant_ids[0].gaia_id)
+        conversation.logger.info("{} was added by {}".format(added_user.username, adding_user.username), extra={
+            "username": "****",
+            "message_time": datetime.strftime(datetime.now(), "%Y-%m-%d %X")
+        })
 
     def create_user_from_id(self, user_id, conversation):
         logger.debug("Creating User with id {}".format(user_id))
