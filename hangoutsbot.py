@@ -16,6 +16,7 @@ from models.command import Command
 
 from utils.commands import register_commands
 from utils.enums import EventType, ConversationType
+from utils.textutils import spacing
 
 from datetime import datetime
 
@@ -122,7 +123,9 @@ class HangoutsBot(object):
         return True
 
     @asyncio.coroutine
-    def send_message(self, conversation, message):
+    def send_message(self, conversation, message, filter_to_use):
+        if filter_to_use == "spacing":
+            message = spacing(message)
         request = hangups.hangouts_pb2.SendChatMessageRequest(
             request_header=self.client.get_request_header(),
             event_request_header=hangups.hangouts_pb2.EventRequestHeader(

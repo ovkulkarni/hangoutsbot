@@ -1,6 +1,6 @@
 from models.command import BaseCommand
 from utils.parser import parser
-
+from utils.textutils import spacing
 import asyncio
 
 
@@ -14,6 +14,7 @@ class Ping(BaseCommand):
         parsed = self.parser.parse_known_args(args)
         if len(parsed[1]) == 0:
             parsed[1].append("pong")
-        yield from bot.send_message(conversation, " ".join(parsed[1]))
+        message = " ".join(parsed[1])
+        yield from bot.send_message(conversation, message, parsed[0].filter)
 
 command = Ping("ping", {}, parser, False)
