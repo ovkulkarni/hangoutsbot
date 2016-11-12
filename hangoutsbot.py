@@ -59,7 +59,7 @@ class HangoutsBot(object):
                 [seg.text for seg in state_update.event_notification.event.chat_message.message_content.segment]), time=datetime.now())
             message.conversation.logger.info(message.text, extra={
                 "username": message.user.username,
-                "message_time": datetime.strftime(message.time, "%X"),
+                "message_time": datetime.strftime(message.time, "%Y-%m-%d %X"),
             })
             return True
         self.check_conversation_participants(state_update.conversation)
@@ -74,7 +74,7 @@ class HangoutsBot(object):
         message = Message.create(conversation=conversation, user=sending_user, text=message_body, time=datetime.now())
         message.conversation.logger.info(message.text, extra={
             "username": message.user.username,
-            "message_time": datetime.strftime(message.time, "%X"),
+            "message_time": datetime.strftime(message.time, "%Y-%m-%d %X"),
         })
 
         matched = self.command_matcher.match(message.text)
