@@ -17,18 +17,9 @@ from utils.enums import EventType, ConversationType
 
 from datetime import datetime
 
-# main log
 logger = logging.getLogger(__name__)
 logging.basicConfig(format="%(levelname)s: %(asctime)s | %(message)s")
 logger.setLevel(logging.DEBUG)
-
-# messages log
-message_formatter = logging.Formatter('[%(message_time)s] <%(username)s> %(message)s')
-file_handler = logging.FileHandler('bot_messages.log')
-file_handler.setFormatter(message_formatter)
-message_logger = logging.getLogger("message_logger")
-message_logger.setLevel(logging.INFO)
-message_logger.addHandler(file_handler)
 
 
 class HangoutsBot(object):
@@ -74,7 +65,7 @@ class HangoutsBot(object):
         for seg in state_update.event_notification.event.chat_message.message_content.segment:
             message_body += seg.text
         message = Message.create(conversation=conversation, user=sending_user, text=message_body, time=datetime.now())
-        message_logger.info(message.text, extra={
+        message.conversation.logger.info(message.text, extra={
             "username": message.user.username,
             "message_time": datetime.strftime(message.time, "%X"),
         })
@@ -115,6 +106,25 @@ class HangoutsBot(object):
                 logger.debug("Adding User {} to Conversation {}".format(user.id, conv.id))
                 conv.members.add(user)
         return True
+
+    @asyncio.coroutine
+    def send_message(self, conversation, message):
+        request = hangups.hangouts_pb2.SendChatMessageRequest(
+            request_header=client.get_request_header(),
+            event_request_header=hangups.hangouts_pb2.EventRequestHeader(
+                conversation_id=hangups.hangouts_pb2.ConversationId(
+                    id=conversation.id
+                ),
+                client_generated_id=client.get_client_generated_id(),
+            ),
+            message_content=hangups.hangouts_pb2.MessageContent(
+                segment=[hangups.ChatMessageSegment(message).serialize()],
+            ),
+        )
+    try:
+        yield from client.send_chat_message(request)
+    except:
+        logger.error("Unable to send message to {} with text '{}'".format(conversation, message))
 
 if __name__ == "__main__":
     print("Run the bot using the manage.py file: ./manage.py run")
