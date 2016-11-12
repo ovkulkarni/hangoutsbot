@@ -18,7 +18,7 @@ class Conversation(BaseModel):
     @property
     def logger(self):
         message_logger = logging.getLogger(self.id)
-        message_formatter = logging.Formatter('[%(message_time)s] <%(username)s> %(message)s')
+        message_formatter = logging.Formatter('[%(message_time)s] %(username)s %(message)s')
         file_handler = logging.FileHandler(os.path.join(settings.LOGGING_DIRECTORY, '{}.log'.format(self.id)))
         file_handler.setFormatter(message_formatter)
         message_logger.setLevel(logging.INFO)

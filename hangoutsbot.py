@@ -47,6 +47,8 @@ class HangoutsBot(object):
         logger.debug("Handling event update")
         if state_update.event_notification.event.event_type == EventType.EVENT_TYPE_REGULAR_CHAT_MESSAGE.value:
             yield from self.handle_message(state_update)
+        elif state_update.event_notification.event.event_type == EventType.EVENT_TYPE_CONVERSATION_RENAME.value:
+            yield from self.handle_rename(state_update)
         else:
             pass
 
@@ -84,6 +86,20 @@ class HangoutsBot(object):
                 yield from cmd_to_run.run(bot=self, conversation=message.conversation, user=message.user, args=message.text.split()[1:])
             except Command.DoesNotExist:
                 pass
+        return True
+
+    @asyncio.coroutine
+    def handle_rename(self, state_update):
+        conversation = self.get_or_create_conversation(state_update.conversation)
+        try:
+            user = User.get(id=state_update.event_notification.event.sender_id.gaia_id)
+        except User.DoesNotExist:
+            user = create_user_from_id(state_update.event_notification.event.sender_id.gaia_id)
+        new_name = state_update.event_notification.event.conversation_rename.new_name
+        conversation.logger.info("{} changed topic to {}".format(user.username, new_name), extra={
+            'username': "****",
+            "message_time": datetime.strftime(datetime.now(), "%Y-%m-%d %X")
+        })
         return True
 
     def create_user_from_id(self, user_id, conversation):
