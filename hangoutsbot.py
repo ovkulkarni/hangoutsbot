@@ -30,7 +30,7 @@ class HangoutsBot(object):
         self.command_matcher = re.compile(settings.COMMAND_MATCH_REGEX)
         register_commands()
         self.client = hangups.client.Client(self.login())
-        self.user = User.get(id=settings.BOT_ID)
+        self.user = User.get_or_create(id=settings.BOT_ID, defaults={'first_name': 'Bot', 'last_name': 'User'})[0]
 
     def login(self):
         return hangups.auth.get_auth_stdin(settings.COOKIES_FILE_PATH)
@@ -46,10 +46,6 @@ class HangoutsBot(object):
         logger.debug("Handling event update")
         if state_update.event_notification.event.event_type == EventType.EVENT_TYPE_REGULAR_CHAT_MESSAGE.value:
             yield from self.handle_message(state_update)
-        # elif state_update.event_notification.event.type == EventType.EVENT_TYPE_ADD_USER:
-        #    yield from self.handle_user_added(state_update)
-        # elif state_update.event_notification.event.type == EventType.EVENT_TYPE_REMOVE_USER:
-        #    yield from self.handle_user_removed(state_update)
         else:
             pass
 
