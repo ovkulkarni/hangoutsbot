@@ -22,7 +22,7 @@ class Command(BaseModel):
         if self.admin_required and not user.is_admin:
             run = False
         if run:
-            yield from sys.modules[self.name].command.run(bot, conversation, user, args)
+            yield from sys.modules["commands.{}".format(self.name)].command.run(bot, conversation, user, args)
         else:
             yield from bot.send_message(conversation, "You're not an admin!")
 

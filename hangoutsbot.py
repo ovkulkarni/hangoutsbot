@@ -2,6 +2,7 @@
 
 import logging
 import asyncio
+import re
 import os
 import sys
 import hangups
@@ -11,6 +12,7 @@ import settings
 from models.user import User
 from models.conversation import Conversation
 from models.message import Message
+from models.command import Command
 
 from utils.commands import register_commands
 from utils.enums import EventType, ConversationType
@@ -18,15 +20,17 @@ from utils.enums import EventType, ConversationType
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(format="%(levelname)s: %(asctime)s | %(message)s")
+logging.basicConfig(format="%(name)s - %(levelname)s: %(asctime)s | %(message)s")
 logger.setLevel(logging.DEBUG)
 
 
 class HangoutsBot(object):
 
     def __init__(self):
+        self.command_matcher = re.compile(settings.COMMAND_MATCH_REGEX)
         register_commands()
         self.client = hangups.client.Client(self.login())
+        self.user = User.get(id=settings.BOT_ID)
 
     def login(self):
         return hangups.auth.get_auth_stdin(settings.COOKIES_FILE_PATH)
@@ -52,9 +56,15 @@ class HangoutsBot(object):
     @asyncio.coroutine
     def handle_message(self, state_update):
         logger.debug("Handling message")
-        if state_update.event_notification.event.sender_id.gaia_id == settings.BOT_ID:
-            return True
         conversation = self.get_or_create_conversation(state_update.conversation)
+        if state_update.event_notification.event.sender_id.gaia_id == settings.BOT_ID:
+            message = Message.create(conversation=conversation, user=self.user, text="".join(
+                [seg.text for seg in state_update.event_notification.event.chat_message.message_content.segment]), time=datetime.now())
+            message.conversation.logger.info(message.text, extra={
+                "username": message.user.username,
+                "message_time": datetime.strftime(message.time, "%X"),
+            })
+            return True
         self.check_conversation_participants(state_update.conversation)
         try:
             sending_user = User.get(User.id == state_update.event_notification.event.sender_id.gaia_id)
@@ -69,6 +79,14 @@ class HangoutsBot(object):
             "username": message.user.username,
             "message_time": datetime.strftime(message.time, "%X"),
         })
+
+        matched = self.command_matcher.match(message.text)
+        if matched:
+            try:
+                cmd_to_run = Command.get(name=matched.group(1))
+                yield from cmd_to_run.run(bot=self, conversation=message.conversation, user=message.user, args=message.text.split()[1:])
+            except Command.DoesNotExist:
+                pass
         return True
 
     def create_user_from_id(self, user_id, conversation):
@@ -86,10 +104,10 @@ class HangoutsBot(object):
         return user
 
     def get_or_create_conversation(self, conversation):
-        logger.debug("Creating Conversation with id {}".format(conversation.conversation_id.id))
         try:
             conv = Conversation.get(Conversation.id == conversation.conversation_id.id)
         except Conversation.DoesNotExist:
+            logger.debug("Creating Conversation with id {}".format(conversation.conversation_id.id))
             is_group = conversation.type == ConversationType.CONVERSATION_TYPE_GROUP.value
             conv = Conversation.create(id=conversation.conversation_id.id, group=is_group)
         return conv

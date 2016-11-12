@@ -8,6 +8,8 @@ DATABASE_PATH = os.path.join(BASE_DIR, "private/database.db")
 
 LOGGING_DIRECTORY = os.path.join(BASE_DIR, "logs/")
 
+COMMAND_MATCH_REGEX = r"^!(\S+)"
+
 try:
     from .secret import *  # noqa
 except ImportError:

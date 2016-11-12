@@ -10,7 +10,7 @@ class User(BaseModel):
 
     @property
     def username(self):
-        return "{}{}".format(self.first_name.lower(), self.last_name.lower())
+        return "{}{}".format(self.first_name.lower(), self.last_name.lower()).replace(" ", "")
 
     @property
     def full_name(self):
