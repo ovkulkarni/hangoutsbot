@@ -31,7 +31,7 @@ class HangoutsBot(object):
         self.command_matcher = re.compile(settings.COMMAND_MATCH_REGEX)
         register_commands()
         self.client = hangups.client.Client(self.login())
-        self.user = User.get_or_create(id=settings.BOT_ID, defaults={'first_name': 'Bot', 'last_name': 'User'})[0]
+        self.user = User.get_or_create(id=settings.BOT_ID, defaults={'first_name': settings.BOT_FIRST_NAME, 'last_name': settings.BOT_LAST_NAME})[0]
 
     def login(self):
         return hangups.auth.get_auth_stdin(settings.COOKIES_FILE_PATH)
