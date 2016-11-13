@@ -9,7 +9,7 @@ from models.hook import Hook
 from hangoutsbot import HangoutsBot
 
 from manager import Manager
-from colors import green, red
+from colors import red
 
 import settings
 
