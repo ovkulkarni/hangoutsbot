@@ -7,6 +7,7 @@ from .user import User
 import settings
 
 import logging
+import logging.handlers
 import os
 
 
@@ -19,12 +20,13 @@ class Conversation(BaseModel):
     def logger(self):
         message_logger = logging.getLogger(self.id)
         message_formatter = logging.Formatter('[%(message_time)s] <%(username)s> %(message)s')
-        file_handler = logging.FileHandler(os.path.join(settings.LOGGING_DIRECTORY, '{}.log'.format(self.id)))
+        file_handler = logging.handlers.RotatingFileHandler(
+            os.path.join(settings.LOGGING_DIRECTORY, '{}.log'.format(self.id)), maxBytes=20000000, backupCount=5)
         file_handler.setFormatter(message_formatter)
         message_logger.setLevel(logging.INFO)
         if len(message_logger.handlers) > 0:
             for handler in message_logger.handlers:
-                if not isinstance(handler, logging.FileHandler):
+                if not isinstance(handler, logging.handlers.RotatingFileHandler):
                     message_logger.addHandler(file_handler)
         else:
             message_logger.addHandler(file_handler)
