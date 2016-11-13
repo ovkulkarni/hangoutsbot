@@ -24,7 +24,8 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(format="%(name)s - %(levelname)s: %(asctime)s | %(message)s")
-logger.setLevel(logging.DEBUG)
+if settings.DEBUG:
+    logger.setLevel(logging.DEBUG)
 
 
 class HangoutsBot(object):
@@ -85,7 +86,10 @@ class HangoutsBot(object):
         if matched:
             try:
                 cmd_to_run = Command.get(name=matched.group(1).lower())
-                yield from cmd_to_run.run(bot=self, conversation=message.conversation, user=message.user, args=message.text.split(matched.group(1), 1)[-1].split()[1:])
+                yield from cmd_to_run.run(bot=self,
+                                          conversation=message.conversation,
+                                          user=message.user,
+                                          args=message.text.split(matched.group(1), 1)[-1].split())
             except Command.DoesNotExist:
                 pass
         for hook in self.hooks:

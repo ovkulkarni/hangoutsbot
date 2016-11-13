@@ -10,6 +10,8 @@ LOGGING_DIRECTORY = os.path.join(BASE_DIR, "logs/")
 
 COMMAND_MATCH_REGEX = r"^![ ]?(\S+)"
 
+DEBUG = os.getenv("DEBUG").lower() == "true" if os.getenv("DEBUG") else True
+
 try:
     from .secret import *  # noqa
 except ImportError:
