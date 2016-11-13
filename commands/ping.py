@@ -6,8 +6,8 @@ import asyncio
 
 class Ping(BaseCommand):
 
-    def __init__(self, name, config, parser, admin_required):
-        super(Ping, self).__init__(name, config, parser, admin_required)
+    def __init__(self, name, parser, admin_required):
+        super(Ping, self).__init__(name, parser, admin_required)
 
     @asyncio.coroutine
     def run(self, bot, conversation, user, args):
@@ -17,4 +17,4 @@ class Ping(BaseCommand):
         message = " ".join(parsed[1])
         yield from bot.send_message(conversation, message, parsed[0].filter)
 
-command = Ping("ping", {}, parser, False)
+command = Ping("ping", parser, False)

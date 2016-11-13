@@ -32,12 +32,11 @@ class Command(BaseModel):
 
 class BaseCommand(object):
 
-    def __init__(self, name, config={}, parser=None, admin_required=False):
+    def __init__(self, name, parser=None, admin_required=False):
         self.name = name
-        self.config = config
         self.parser = parser
         self.admin_required = admin_required
 
     @asyncio.coroutine
-    def run(conversation, user, args):
+    def run(self, bot, conversation, user, args):
         raise NotImplementedError("The `run` method must be implemented.")
