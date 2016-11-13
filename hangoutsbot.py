@@ -45,7 +45,10 @@ class HangoutsBot(object):
         logger.debug(self.client)
         self.client.on_state_update.add_observer(self.handle_update)
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.client.connect())
+        try:
+            loop.run_until_complete(self.client.connect())
+        except KeyboardInterrupt:
+            sys.exit(0)
 
     @asyncio.coroutine
     def handle_update(self, state_update):
