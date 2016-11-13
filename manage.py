@@ -11,7 +11,11 @@ from hangoutsbot import HangoutsBot
 from manager import Manager
 from colors import green
 
+import settings
+
 import os
+import hangups
+import asyncio
 
 manager = Manager()
 
@@ -53,6 +57,28 @@ def shell():
         "from models.message import Message;"
         "from models.hook import Hook;'"
     )
+
+
+@manager.command
+def get_bot_id():
+    """Get ID of Bot Account to put in secret.py"""
+    client = hangups.client.Client(hangups.auth.get_auth_stdin(settings.COOKIES_FILE_PATH))
+    client.on_connect.add_observer(lambda: asyncio.async(get_id(client)))
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(client.connect())
+
+
+@asyncio.coroutine
+def get_id(client):
+    request = hangups.hangouts_pb2.GetSelfInfoRequest(
+        request_header=client.get_request_header(),
+    )
+    try:
+        response = yield from client.get_self_info(request)
+        print(response.self_entity.id.gaia_id)
+    finally:
+        yield from client.disconnect()
+
 
 if __name__ == '__main__':
     manager.main()
