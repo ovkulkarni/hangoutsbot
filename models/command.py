@@ -17,13 +17,10 @@ class Command(BaseModel):
     def run(self, bot, conversation, user, args):
         if "commands.{}".format(self.name) not in sys.modules:
             raise KeyError("Command with name {} not imported!".format(self.name))
-        run = True
         if self.admin_required and not user.is_admin:
-            run = False
-        if run:
-            yield from sys.modules["commands.{}".format(self.name)].command.run(bot, conversation, user, args)
-        else:
             yield from bot.send_message(conversation, "You're not an admin!")
+        else:
+            yield from sys.modules["commands.{}".format(self.name)].command.run(bot, conversation, user, args)
 
     def __str__(self):
         return self.name
