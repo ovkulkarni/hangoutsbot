@@ -42,7 +42,7 @@ class URLHook(object):
             if matcher.match(word):
                 urls.append(matcher.match(word).group(1))
         for url in urls:
-            message = "** {} ** - {}".format(self.get_url_title(url), self.get_short_url(url))
+            message = "** {} **\n{}".format(self.get_url_title(url), self.get_short_url(url))
             yield from bot.send_message(conversation, message)
 
 

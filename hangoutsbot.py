@@ -85,7 +85,7 @@ class HangoutsBot(object):
         if matched:
             try:
                 cmd_to_run = Command.get(name=matched.group(1).lower())
-                yield from cmd_to_run.run(bot=self, conversation=message.conversation, user=message.user, args=message.text.split()[1:])
+                yield from cmd_to_run.run(bot=self, conversation=message.conversation, user=message.user, args=message.text.split(matched.group(1), 1)[-1].split()[1:])
             except Command.DoesNotExist:
                 pass
         for hook in self.hooks:
@@ -180,7 +180,7 @@ class HangoutsBot(object):
                 client_generated_id=self.client.get_client_generated_id(),
             ),
             message_content=hangups.hangouts_pb2.MessageContent(
-                segment=[hangups.ChatMessageSegment(message).serialize()],
+                segment=[seg.serialize() for seg in hangups.ChatMessageSegment.from_str(message)],
             ),
         )
         try:
