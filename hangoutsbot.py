@@ -13,8 +13,10 @@ from models.user import User
 from models.conversation import Conversation
 from models.message import Message
 from models.command import Command
+from models.hook import Hook
 
 from utils.commands import register_commands
+from utils.hooks import register_hooks
 from utils.enums import EventType, ConversationType
 from utils.textutils import spacing
 
@@ -30,8 +32,10 @@ class HangoutsBot(object):
     def __init__(self):
         self.command_matcher = re.compile(settings.COMMAND_MATCH_REGEX)
         register_commands()
+        register_hooks()
         self.client = hangups.client.Client(self.login())
         self.user = User.get_or_create(id=settings.BOT_ID, defaults={'first_name': settings.BOT_FIRST_NAME, 'last_name': settings.BOT_LAST_NAME})[0]
+        self.hooks = Hook.select()
 
     def login(self):
         return hangups.auth.get_auth_stdin(settings.COOKIES_FILE_PATH)
@@ -77,7 +81,6 @@ class HangoutsBot(object):
             "username": message.user.username,
             "message_time": datetime.strftime(message.time, "%Y-%m-%d %X"),
         })
-
         matched = self.command_matcher.match(message.text)
         if matched:
             try:
@@ -85,6 +88,10 @@ class HangoutsBot(object):
                 yield from cmd_to_run.run(bot=self, conversation=message.conversation, user=message.user, args=message.text.split()[1:])
             except Command.DoesNotExist:
                 pass
+        for hook in self.hooks:
+            matcher = re.compile(r"{}".format(hook.regex))
+            if matcher.match(message.text):
+                yield from hook.run(bot=self, conversation=message.conversation, user=message.user, text=message.text)
         return True
 
     @asyncio.coroutine
@@ -161,7 +168,7 @@ class HangoutsBot(object):
         return True
 
     @asyncio.coroutine
-    def send_message(self, conversation, message, filter_to_use):
+    def send_message(self, conversation, message, filter_to_use=None):
         if filter_to_use == "spacing":
             message = spacing(message)
         request = hangups.hangouts_pb2.SendChatMessageRequest(

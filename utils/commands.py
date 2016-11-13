@@ -15,8 +15,5 @@ def register_commands():
     for command in all_commands:
         logger.debug("Creating {}".format(command))
         Command.create(name=command.name, admin_required=command.admin_required)
-        if command.name in sys.modules:
-            Command.delete().execute()
-            raise NameError("Two modules of conflicting names found! Cleaning up and exiting...")
         importlib.import_module("commands.{}".format(command.name))
     return True
