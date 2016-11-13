@@ -37,7 +37,9 @@ Get Bot's ID and set in `settings/secret.py`:
 Modify any other relevant information in `settings/secret.py` to your liking.
 
 Run the bot:
-`./manage.py run`
+```
+./manage.py run
+```
 **NOTE: Make sure to run the bot before adding it to a conversation. This way, it can correctly populate the database with Users.**
 
 Accessing the python shell with context:
