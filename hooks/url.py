@@ -46,4 +46,4 @@ class URLHook(object):
             yield from bot.send_message(conversation, message)
 
 
-hook = URLHook("url", "(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)")
+hook = URLHook("url", ".*(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+).*")
