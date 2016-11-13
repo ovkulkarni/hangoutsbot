@@ -2,7 +2,6 @@ import asyncio
 import settings
 import bs4
 import re
-import json
 
 from requests import get, post, exceptions
 
@@ -17,8 +16,7 @@ class URLHook(object):
         try:
             r = post("https://www.googleapis.com/urlshortener/v1/url",
                      params={"key": settings.GOOGLE_API_KEY}, json=({"longUrl": url}), headers={'Content-Type': 'application/json'})
-            data = json.loads(r.text)
-            return data["id"]
+            return r.json()["id"]
         except exceptions.MissingSchema:
             shorten("http://" + url)
         except:
