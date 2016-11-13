@@ -153,12 +153,9 @@ class HangoutsBot(object):
         return user
 
     def get_or_create_conversation(self, conversation):
-        try:
-            conv = Conversation.get(Conversation.id == conversation.conversation_id.id)
-        except Conversation.DoesNotExist:
-            logger.debug("Creating Conversation with id {}".format(conversation.conversation_id.id))
-            is_group = conversation.type == ConversationType.CONVERSATION_TYPE_GROUP.value
-            conv = Conversation.create(id=conversation.conversation_id.id, group=is_group)
+        return Conversation.get_or_create(id=conversation.conversation_id.id, defaults={
+            'group': conversation.type == ConversationType.CONVERSATION_TYPE_GROUP.value
+        })
         return conv
 
     def check_conversation_participants(self, conversation):
