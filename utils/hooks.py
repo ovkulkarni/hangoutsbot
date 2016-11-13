@@ -14,6 +14,9 @@ def register_hooks():
     Hook.delete().execute()
     for hook in all_hooks:
         logger.debug("Creating {}".format(hook))
+        if "hooks.{}".format(hook.name) in sys.modules:
+            Hook.delete().execute()
+            raise NameError("Multiple hooks with same name found! Cleaning up and exiting...")
         Hook.create(name=hook.name, regex=hook.regex)
         importlib.import_module("hooks.{}".format(hook.name))
     return True

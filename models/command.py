@@ -15,9 +15,8 @@ class Command(BaseModel):
 
     @asyncio.coroutine
     def run(self, bot, conversation, user, args):
-        if self.name not in sys.modules:
-            logger.info("Importing formerly unimported command: {}".format(self.name))
-            importlib.import_module("commands.{}".format(self.name))
+        if "commands.{}".format(self.name) not in sys.modules:
+            raise KeyError("Command with name {} not imported!".format(self.name))
         run = True
         if self.admin_required and not user.is_admin:
             run = False

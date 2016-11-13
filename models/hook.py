@@ -13,7 +13,7 @@ class Hook(BaseModel):
     @asyncio.coroutine
     def run(self, bot, conversation, user, text):
         if "hooks.{}".format(self.name) not in sys.modules:
-            importlib.import_module("hooks.{}".format(self.name))
+            raise KeyError("Hook with name {} not imported!".format(self.name))
         yield from sys.modules["hooks.{}".format(self.name)].hook.run(bot, conversation, user, text)
 
     def __str__(self):
