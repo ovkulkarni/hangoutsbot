@@ -9,13 +9,15 @@ from models.hook import Hook
 from hangoutsbot import HangoutsBot
 
 from manager import Manager
-from colors import green
+from colors import green, red
 
 import settings
 
 import os
+import sys
 import hangups
 import asyncio
+import code
 
 manager = Manager()
 
@@ -42,21 +44,7 @@ def run():
 @manager.command
 def shell():
     """Open python shell with context"""
-    print(green(">>> from database import database"))
-    print(green(">>> from models.conversation import Conversation"))
-    print(green(">>> from models.user import User"))
-    print(green(">>> from models.command import Command"))
-    print(green(">>> from models.message import Message"))
-    print(green(">>> from models.hook import Hook"))
-    os.system(
-        "python -i -c '"
-        "from database import database;"
-        "from models.conversation import Conversation;"
-        "from models.user import User;"
-        "from models.command import Command;"
-        "from models.message import Message;"
-        "from models.hook import Hook;'"
-    )
+    code.interact(local=globals())
 
 
 @manager.command
@@ -81,4 +69,7 @@ def get_id(client):
 
 
 if __name__ == '__main__':
+    if sys.version_info < (3, 3):
+        print(red("python3.3 is required to use hangoutsbot"))
+        sys.exit(1)
     manager.main()

@@ -1,5 +1,5 @@
 from database import BaseModel
-from peewee import *
+from peewee import ForeignKeyField, TextField, DateTimeField
 
 from .user import User
 from .conversation import Conversation

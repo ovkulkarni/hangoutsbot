@@ -1,6 +1,6 @@
 from database import BaseModel
-from peewee import *
-from playhouse.fields import *
+from peewee import CharField, BooleanField
+from playhouse.fields import ManyToManyField
 
 from .user import User
 

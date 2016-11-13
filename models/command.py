@@ -1,5 +1,5 @@
 from database import BaseModel
-from peewee import *
+from peewee import CharField, BooleanField
 import sys
 import importlib
 import logging

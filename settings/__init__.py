@@ -6,7 +6,7 @@ COOKIES_FILE_PATH = os.path.join(BASE_DIR, "private/refresh_token.txt")
 
 DATABASE_PATH = os.path.join(BASE_DIR, "private/database.db")
 
-LOGGING_DIRECTORY = os.path.join(BASE_DIR, "logs/")
+LOGGING_DIRECTORY = os.path.join(BASE_DIR, "logs")
 
 COMMAND_MATCH_REGEX = r"^![ ]?(\S+)"
 
