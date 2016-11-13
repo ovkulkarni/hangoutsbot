@@ -155,8 +155,7 @@ class HangoutsBot(object):
     def get_or_create_conversation(self, conversation):
         return Conversation.get_or_create(id=conversation.conversation_id.id, defaults={
             'group': conversation.type == ConversationType.CONVERSATION_TYPE_GROUP.value
-        })
-        return conv
+        })[0]
 
     def check_conversation_participants(self, conversation):
         logger.debug("Checking Conversation participants")
