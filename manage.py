@@ -4,6 +4,7 @@ from models.conversation import Conversation
 from models.user import User
 from models.command import Command
 from models.message import Message
+from models.hook import Hook
 
 from hangoutsbot import HangoutsBot
 
@@ -18,7 +19,7 @@ manager = Manager()
 @manager.command
 def create_tables():
     """Create the tables for the models in the database"""
-    tables = [Conversation, User, Command, Message, Conversation.members.get_through_model()]
+    tables = [Conversation, User, Command, Message, Conversation.members.get_through_model(), Hook]
     for table in tables:
         if table.table_exists():
             print("Table already exists for {}".format(table))
@@ -42,13 +43,15 @@ def shell():
     print(green(">>> from models.user import User"))
     print(green(">>> from models.command import Command"))
     print(green(">>> from models.message import Message"))
+    print(green(">>> from models.hook import Hook"))
     os.system(
         "python -i -c '"
         "from database import database;"
         "from models.conversation import Conversation;"
         "from models.user import User;"
         "from models.command import Command;"
-        "from models.message import Message;'"
+        "from models.message import Message;"
+        "from models.hook import Hook;'"
     )
 
 if __name__ == '__main__':

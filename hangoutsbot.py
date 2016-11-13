@@ -68,12 +68,7 @@ class HangoutsBot(object):
                 "message_time": datetime.strftime(message.time, "%Y-%m-%d %X"),
             })
             return True
-        self.check_conversation_participants(state_update.conversation)
-        try:
-            sending_user = User.get(User.id == state_update.event_notification.event.sender_id.gaia_id)
-        except User.DoesNotExist:
-            user_id = state_update.event_notification.event.sender_id.gaia_id
-            sending_user = self.create_user_from_id(user_id, state_update.conversation)
+        sending_user = User.get(User.id == state_update.event_notification.event.sender_id.gaia_id)
         message_body = ""
         for seg in state_update.event_notification.event.chat_message.message_content.segment:
             message_body += seg.text
@@ -95,7 +90,6 @@ class HangoutsBot(object):
     @asyncio.coroutine
     def handle_rename(self, state_update):
         conversation = self.get_or_create_conversation(state_update.conversation)
-        self.check_conversation_participants(state_update.conversation)
         try:
             user = User.get(id=state_update.event_notification.event.sender_id.gaia_id)
         except User.DoesNotExist:
@@ -110,12 +104,7 @@ class HangoutsBot(object):
     @asyncio.coroutine
     def handle_user_removed(self, state_update):
         conversation = self.get_or_create_conversation(state_update.conversation)
-        self.check_conversation_participants(state_update.conversation)
-        user = User.get(id=state_update.event_notification.event.sender_id.gaia_id)
-        try:
-            removing_user = User.get(id=state_update.event_notification.event.sender_id.gaia_id)
-        except User.DoesNotExist:
-            removing_user = create_user_from_id(state_update.event_notification.event.sender_id.gaia_id)
+        removing_user = User.get(id=state_update.event_notification.event.sender_id.gaia_id)
         removed_user = User.get(id=state_update.event_notification.event.membership_change.participant_ids[0].gaia_id)
         conversation.members.remove(removed_user)
         conversation.logger.info("{} was kicked by {}".format(removed_user.username, removing_user.username), extra={
