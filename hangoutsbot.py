@@ -84,7 +84,7 @@ class HangoutsBot(object):
         matched = self.command_matcher.match(message.text)
         if matched:
             try:
-                cmd_to_run = Command.get(name=matched.group(1))
+                cmd_to_run = Command.get(name=matched.group(1).lower())
                 yield from cmd_to_run.run(bot=self, conversation=message.conversation, user=message.user, args=message.text.split()[1:])
             except Command.DoesNotExist:
                 pass
