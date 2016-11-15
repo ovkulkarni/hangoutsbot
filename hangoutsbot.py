@@ -171,9 +171,13 @@ class HangoutsBot(object):
         return True
 
     @asyncio.coroutine
-    def send_message(self, conversation, message, filter_to_use=None):
+    def send_message(self, conversation, message, image_file=None, filter_to_use=None):
         if filter_to_use == "spacing":
             message = spacing(message)
+        if image_file:
+            image_id = yield from self.client.upload_image(image_file)
+        else:
+            image_id = None
         request = hangups.hangouts_pb2.SendChatMessageRequest(
             request_header=self.client.get_request_header(),
             event_request_header=hangups.hangouts_pb2.EventRequestHeader(
@@ -186,6 +190,8 @@ class HangoutsBot(object):
                 segment=[seg.serialize() for seg in hangups.ChatMessageSegment.from_str(message)],
             ),
         )
+        if image_id:
+            request.existing_media.photo.photo_id = image_id
         try:
             yield from self.client.send_chat_message(request)
         except:
