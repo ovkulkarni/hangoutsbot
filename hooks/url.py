@@ -19,7 +19,7 @@ class URLHook(object):
             return r.json()["id"]
         except exceptions.MissingSchema:
             self.get_short_url("http://" + url)
-        except:
+        except KeyError:
             return url
 
     def get_url_title(self, url):

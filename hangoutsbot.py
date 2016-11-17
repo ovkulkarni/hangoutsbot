@@ -193,7 +193,7 @@ class HangoutsBot(object):
             request.existing_media.photo.photo_id = image_id
         try:
             yield from self.client.send_chat_message(request)
-        except:
+        except hangups.exceptions.NetworkError:
             logger.error("Unable to send message to {} with text '{}'".format(conversation, message))
 
 
