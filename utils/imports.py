@@ -13,5 +13,5 @@ def import_all(name, object_name):
         if module_name == "__init__":
             continue
         importlib.import_module("{}.{}".format(name, module_name))
-        all_objects.append(getattr(sys.modules["{}.{}".format(module_name)], object_name))
+        all_objects.append(getattr(sys.modules["{}.{}".format(name, module_name)], object_name))
     return all_objects
