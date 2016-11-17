@@ -106,7 +106,7 @@ class HangoutsBot(object):
         try:
             user = User.get(id=state_update.event_notification.event.sender_id.gaia_id)
         except User.DoesNotExist:
-            user = self.create_user_from_id(state_update.event_notification.event.sender_id.gaia_id)
+            user = self.create_user_from_id(state_update.event_notification.event.sender_id.gaia_id, state_update.conversation)
         new_name = state_update.event_notification.event.conversation_rename.new_name
         conversation.logger.info("{} changed topic to {}".format(user.username, new_name), extra={
             'username': "****",
