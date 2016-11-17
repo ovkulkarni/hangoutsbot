@@ -3,7 +3,6 @@
 import logging
 import asyncio
 import re
-import os
 import sys
 import hangups
 
@@ -196,6 +195,7 @@ class HangoutsBot(object):
             yield from self.client.send_chat_message(request)
         except:
             logger.error("Unable to send message to {} with text '{}'".format(conversation, message))
+
 
 if __name__ == "__main__":
     print("Run the bot using the manage.py file: ./manage.py run")

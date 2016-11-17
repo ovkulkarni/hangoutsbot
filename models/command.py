@@ -1,10 +1,8 @@
 from database import BaseModel
 from peewee import CharField, BooleanField
 import sys
-import importlib
 import logging
 import asyncio
-import settings
 
 logger = logging.getLogger(__name__)
 

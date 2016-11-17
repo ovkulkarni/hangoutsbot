@@ -3,7 +3,6 @@ from models.hook import Hook
 from hooks import all_hooks
 
 import logging
-import sys
 import importlib
 
 logger = logging.getLogger(__name__)

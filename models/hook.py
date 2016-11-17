@@ -2,7 +2,6 @@ from database import BaseModel
 from peewee import CharField
 
 import sys
-import importlib
 import asyncio
 
 

@@ -13,7 +13,6 @@ from colors import red
 
 import settings
 
-import os
 import sys
 import hangups
 import asyncio

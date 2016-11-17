@@ -3,7 +3,6 @@ from models.command import Command
 from commands import all_commands
 
 import logging
-import sys
 import importlib
 
 logger = logging.getLogger(__name__)
