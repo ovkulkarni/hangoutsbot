@@ -1,5 +1,5 @@
 # HangoutsBot
-[![Build Status](https://travis-ci.org/ovkulkarni/hangoutsbot.svg?branch=master)](https://travis-ci.org/ovkulkarni/hangoutsbot)
+[![Build Status](https://travis-ci.org/ovkulkarni/hangoutsbot.svg?branch=master)](https://travis-ci.org/ovkulkarni/hangoutsbot) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5af98a2416f64e8696c157381a18312c)](https://www.codacy.com/app/okulkarni/hangoutsbot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ovkulkarni/hangoutsbot&amp;utm_campaign=Badge_Grade)
 
 This is a bot made to interface with Google Hangouts. It uses the [`hangups`](https://github.com/tdryer/hangups) library to connect to hangouts.
 
