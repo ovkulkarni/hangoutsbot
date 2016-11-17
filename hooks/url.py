@@ -18,7 +18,7 @@ class URLHook(object):
                      params={"key": settings.GOOGLE_API_KEY}, json=({"longUrl": url}), headers={'Content-Type': 'application/json'})
             return r.json()["id"]
         except exceptions.MissingSchema:
-            get_short_url("http://" + url)
+            self.get_short_url("http://" + url)
         except:
             return url
 
