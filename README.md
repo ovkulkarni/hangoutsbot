@@ -1,5 +1,8 @@
 # HangoutsBot
+[![Build Status](https://travis-ci.org/ovkulkarni/hangoutsbot.svg?branch=master)](https://travis-ci.org/ovkulkarni/hangoutsbot)
+
 This is a bot made to interface with Google Hangouts. It uses the [`hangups`](https://github.com/tdryer/hangups) library to connect to hangouts.
+
 **NOTE: This project requires `python3`**
 
 ## Setting up

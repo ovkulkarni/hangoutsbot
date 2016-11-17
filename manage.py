@@ -69,7 +69,7 @@ def get_id(client):
 
 
 if __name__ == '__main__':
-    if sys.version_info < (3, 3):
-        print(red("python3.3 is required to use hangoutsbot"))
+    if sys.version_info < (3, 4):
+        print(red("python3.4 is required to use hangoutsbot"))
         sys.exit(1)
     manager.main()
