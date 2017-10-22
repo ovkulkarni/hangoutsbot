@@ -4,23 +4,23 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-aiohttp==0.17.3           # via hangups
-ansicolors==1.0.2
-appdirs==1.4.0            # via hangups, setuptools
-beautifulsoup4==4.5.3
-chardet==2.3.0            # via aiohttp
-ConfigArgParse==0.10.0    # via hangups
-hangups==0.4.1
+aiohttp==2.3.1           # via hangups
+ansicolors==1.1.8
+appdirs==1.4.3            # via hangups, setuptools
+beautifulsoup4==4.6.0
+chardet==3.0.4            # via aiohttp
+ConfigArgParse==0.12.0    # via hangups
+hangups==0.4.3
 manage.py==0.2.10
-MechanicalSoup==0.4.0     # via hangups
+MechanicalSoup==0.8.0     # via hangups
 packaging==16.8           # via setuptools
-peewee==2.8.5
-protobuf==3.0.0a3         # via hangups
-pyparsing==2.1.10         # via packaging
+peewee==2.10.2
+protobuf==3.4.0         # via hangups
+pyparsing==2.2.0         # via packaging
 readlike==0.1.2           # via hangups
 ReParser==1.4.3           # via hangups
-requests==2.6.0
-six==1.10.0               # via mechanicalsoup, packaging, setuptools
+requests==2.18.4
+six==1.11.0               # via mechanicalsoup, packaging, setuptools
 urwid==1.3.1              # via hangups
 
 # The following packages are considered to be unsafe in a requirements file:
